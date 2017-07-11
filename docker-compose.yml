@@ -1,0 +1,16 @@
+version: '3'
+services:
+  redis:
+    image: redis
+    ports:
+    - "6379:6379"
+    volumes:
+    - /data
+    container_name: "redis"
+  til:
+    image: pz/til
+    ports:
+    - "8080:8080"
+    links:
+      - redis
+
