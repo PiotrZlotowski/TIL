@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+      http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <mapping>
+        <class-a>com.pz.til.model.MemoDTO</class-a>
+        <class-b>com.pz.til.model.Memo</class-b>
+        <field>
+            <a>id</a>
+            <b>id</b>
+        </field>
+        <field>
+            <a>memoContent</a>
+            <b>content</b>
+        </field>
+        <field>
+            <a>tags</a>
+            <b>tags</b>
+        </field>
+    </mapping>
+</mappings>
