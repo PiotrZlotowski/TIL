@@ -3,9 +3,11 @@ package com.pz.til.service;
 import com.pz.til.model.Memo;
 import com.pz.til.model.MemoDTO;
 import com.pz.til.repository.IMemoRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MemoServiceDefaultImpl implements IMemoService {
 
     private IBeanConverter<MemoDTO, Memo> beanConverter;
