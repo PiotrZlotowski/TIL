@@ -52,10 +52,4 @@ class DozerMappingSpec extends Specification {
         1       || "Memo content 1"
         2       || "Memo content 2"
     }
-
-
-
-
-
-
 }
