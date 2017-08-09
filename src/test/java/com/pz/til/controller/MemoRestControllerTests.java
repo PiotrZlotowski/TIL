@@ -48,8 +48,9 @@ public class MemoRestControllerTests {
                 .content(jsonObject)).andDo(print()).andExpect(status().is2xxSuccessful());
     }
 
+
     @Test
-    public void shouldReturn200AndCollectionOfElementsWhenRetrieveMemosIsCalled() throws Exception {
+    public void shouldReturn200AndCollectionOfElementsWhenRetrieveMemosIsCalledWithJson() throws Exception {
        // given
         MemoDTO memo1 = new MemoDTO(1, "Memo content1", null);
         MemoDTO memo2 = new MemoDTO(2, "Memo content2", null);
@@ -62,6 +63,24 @@ public class MemoRestControllerTests {
         // then
         resultActions.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.content().json(mappedStringJson, false)).andReturn();
+
+    }
+
+
+    @Test
+    public void shouldReturn200AndCollectionOfElementsWhenRetrieveMemosIsCalledWithXml() throws Exception {
+        // given
+        MemoDTO memo1 = new MemoDTO(1, "Memo content1", null);
+        MemoDTO memo2 = new MemoDTO(2, "Memo content2", null);
+        MemoDTO memo3 = new MemoDTO(3, "Memo content3", null);
+        List<MemoDTO> memos = Arrays.asList(memo1, memo2, memo3);
+        Mockito.when(mockMemoService.getAllMemos()).thenReturn(memos);
+        String expectedResponse = "<List xmlns=\"\"><item><id>1</id><memoContent>Memo content1</memoContent></item><item><id>2</id><memoContent>Memo content2</memoContent></item><item><id>3</id><memoContent>Memo content3</memoContent></item></List>";
+        // when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/rest/memos").accept(MediaType.APPLICATION_XML)).andDo(print());
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.content().xml(expectedResponse)).andReturn();
 
     }
 

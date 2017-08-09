@@ -1,10 +1,8 @@
 package com.pz.til.controller.rest;
 
-import com.pz.til.model.Memo;
 import com.pz.til.model.MemoDTO;
-import com.pz.til.repository.IMemoRepository;
 import com.pz.til.service.IMemoService;
-import org.dozer.DozerBeanMapper;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +27,7 @@ public class MemoRestController {
     }
 
 
-    @GetMapping("/memos")
+    @GetMapping(value = "/memos", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<MemoDTO> retrieveMemos() {
          return memoService.getAllMemos();
     }
