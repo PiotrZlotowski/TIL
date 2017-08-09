@@ -39,7 +39,7 @@ public class MemoRestController {
     }
 
 
-    @GetMapping
+    @GetMapping("/getSuggestedMemo")
     public MemoDTO suggestedMemo() {
         return null;
     }
