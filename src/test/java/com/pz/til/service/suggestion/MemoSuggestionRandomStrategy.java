@@ -3,6 +3,7 @@ package com.pz.til.service.suggestion;
 import static org.assertj.core.api.Assertions.*;
 
 import com.pz.til.model.Memo;
+import com.pz.til.model.MemoDTO;
 import com.pz.til.repository.IMemoRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +13,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class MemoSuggestionRandomStrategy {
@@ -33,12 +37,26 @@ public class MemoSuggestionRandomStrategy {
 
     @Test
     public void shouldReturnMockedMemoWhenRetrieveSuggestedMemoIsCalled() {
+        // given
         List<Memo> memos = new ArrayList<>();
         Memo memo = new Memo(1, "Memo content", null);
         memos.add(memo);
-        Mockito.when(memoRepository.findAll()).thenReturn(memos);
-        Memo memo1 = memoSuggestionStrategy.retrieveSuggestedMemo();
-        assertThat(memo1).isEqualTo(memo);
+        when(memoRepository.findAll()).thenReturn(memos);
+        // when
+        Optional<Memo> memoOptional = memoSuggestionStrategy.retrieveSuggestedMemo();
+        Memo memoFromOptional = memoOptional.orElseThrow(NoSuchElementException::new);
+        // then
+        assertThat(memoFromOptional).isEqualTo(memo);
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenNoMemosAreSaved() {
+        // given
+        when(memoRepository.findAll()).thenReturn(null);
+        // when
+        Optional<Memo> memo = memoSuggestionStrategy.retrieveSuggestedMemo();
+        // then
+        assertThat(memo).isEqualTo(Optional.empty());
     }
 
 }

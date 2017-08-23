@@ -41,7 +41,7 @@ public class MemoRestController {
 
     @GetMapping("/suggestedMemo")
     public MemoDTO suggestedMemo() {
-        return null;
+        return memoService.retrieveSuggestedMemo();
     }
 
 }

@@ -5,6 +5,7 @@ import com.pz.til.repository.IMemoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -17,11 +18,19 @@ public class SuggestRandomMemoStrategy implements MemoSuggestionStrategy {
     }
 
     @Override
-    public Memo retrieveSuggestedMemo() {
+    public Optional<Memo> retrieveSuggestedMemo() {
         List<Memo> allMemos = memoRepository.findAll();
+
+        if (allMemos == null || allMemos.isEmpty()) {
+            return Optional.empty();
+        }
+        int memoRandomIndex = getRandomMemoIndex(allMemos);
+        Optional<Memo> optionalMemo = Optional.ofNullable(allMemos.get(memoRandomIndex));
+        return optionalMemo;
+    }
+
+    private int getRandomMemoIndex(List<Memo> allMemos) {
         Random random = new Random(System.currentTimeMillis());
-        int memoRandomIndex = random.nextInt(allMemos.size());
-        Memo memo = allMemos.get(memoRandomIndex);
-        return memo;
+        return random.nextInt(allMemos.size());
     }
 }
