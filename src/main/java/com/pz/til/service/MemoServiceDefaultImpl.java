@@ -4,6 +4,7 @@ import com.pz.til.model.Memo;
 import com.pz.til.model.MemoDTO;
 import com.pz.til.repository.IMemoRepository;
 import com.pz.til.service.suggestion.MemoSuggestionStrategy;
+import io.vavr.control.Option;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,8 +37,8 @@ public class MemoServiceDefaultImpl implements IMemoService {
 
     @Override
     public MemoDTO retrieveSuggestedMemo() {
-        Optional<Memo> memoOptional = memoSuggestionStrategy.retrieveSuggestedMemo();
-        MemoDTO memoDTO = memoOptional.map(beanConverter::convertFromModel).orElseThrow(NoSuchElementException::new);
+        Option<Memo> memoOptional = memoSuggestionStrategy.retrieveSuggestedMemo();
+        MemoDTO memoDTO = memoOptional.map(beanConverter::convertFromModel).getOrElseThrow(NoSuchElementException::new);
         return memoDTO;
     }
 }

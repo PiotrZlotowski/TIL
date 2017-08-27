@@ -1,21 +1,19 @@
 package com.pz.til.service.suggestion;
 
-import static org.assertj.core.api.Assertions.*;
-
 import com.pz.til.model.Memo;
-import com.pz.til.model.MemoDTO;
 import com.pz.til.repository.IMemoRepository;
+import io.vavr.control.Option;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.Random;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,14 +23,14 @@ public class MemoSuggestionRandomStrategy {
 
     private MemoSuggestionStrategy memoSuggestionStrategy;
     private IMemoRepository memoRepository;
+    private Random random;
 
     @Before
     public void memoSuggestionInitialization() {
         memoRepository = mock(IMemoRepository.class);
-        memoSuggestionStrategy = new SuggestRandomMemoStrategy(memoRepository);
+        random = mock(Random.class);
+        memoSuggestionStrategy = new SuggestRandomMemoStrategy(memoRepository, random);
     }
-
-
 
 
     @Test
@@ -42,9 +40,10 @@ public class MemoSuggestionRandomStrategy {
         Memo memo = new Memo(1, "Memo content", null);
         memos.add(memo);
         when(memoRepository.findAll()).thenReturn(memos);
+        when(random.nextInt(memos.size())).thenReturn(0);
         // when
-        Optional<Memo> memoOptional = memoSuggestionStrategy.retrieveSuggestedMemo();
-        Memo memoFromOptional = memoOptional.orElseThrow(NoSuchElementException::new);
+        Option<Memo> memoOptional = memoSuggestionStrategy.retrieveSuggestedMemo();
+        Memo memoFromOptional = memoOptional.getOrElseThrow(NoSuchElementException::new);
         // then
         assertThat(memoFromOptional).isEqualTo(memo);
     }
@@ -54,9 +53,10 @@ public class MemoSuggestionRandomStrategy {
         // given
         when(memoRepository.findAll()).thenReturn(null);
         // when
-        Optional<Memo> memo = memoSuggestionStrategy.retrieveSuggestedMemo();
+        Option<Memo> memo = memoSuggestionStrategy.retrieveSuggestedMemo();
         // then
-        assertThat(memo).isEqualTo(Optional.empty());
+        assertThat(memo).isEqualTo(Option.none());
     }
+
 
 }

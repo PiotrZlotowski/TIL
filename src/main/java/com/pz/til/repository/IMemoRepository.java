@@ -9,7 +9,5 @@ import java.util.List;
  * Created by piotr on 12/07/2017.
  */
 public interface IMemoRepository extends CrudRepository<Memo, Long> {
-
     List<Memo> findAll();
-
 }
