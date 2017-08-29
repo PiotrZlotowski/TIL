@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-public class MemoSuggestionRandomStrategy {
+public class MemoSuggestionRandomStrategyTests {
 
 
     private MemoSuggestionStrategy memoSuggestionStrategy;
@@ -57,6 +57,4 @@ public class MemoSuggestionRandomStrategy {
         // then
         assertThat(memo).isEqualTo(Option.none());
     }
-
-
 }
