@@ -2,9 +2,12 @@ package com.pz.til.controller.rest;
 
 import com.pz.til.model.MemoDTO;
 import com.pz.til.service.IMemoService;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -22,10 +25,12 @@ public class MemoRestController {
     }
 
     @PostMapping("/addmemo")
-    public void addMemo(MemoDTO memoDto) {
+    public void addMemo(@Valid @RequestBody MemoDTO memoDto, BindingResult bindingResult) {
 
+        if (bindingResult.hasErrors()) {
+            throw new IllegalArgumentException("Provided argument is invalid");
+        }
     }
-
 
     @GetMapping(value = "/memos", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<MemoDTO> retrieveMemos() {

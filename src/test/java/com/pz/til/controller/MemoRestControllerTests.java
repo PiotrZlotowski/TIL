@@ -1,25 +1,19 @@
 package com.pz.til.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pz.til.controller.rest.MemoRestController;
-import com.pz.til.model.Memo;
 import com.pz.til.model.MemoDTO;
 import com.pz.til.service.IMemoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
@@ -32,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(MemoRestController.class)
+@WebMvcTest(value = MemoRestController.class)
 public class MemoRestControllerTests {
 
     @Autowired
@@ -50,6 +44,16 @@ public class MemoRestControllerTests {
         mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON)
                 .content(jsonObject)).andDo(print()).andExpect(status().is2xxSuccessful());
     }
+
+    @Test
+    public void shouldReturn400BadRequestWhenNullRequestIsProvided() throws Exception {
+        MemoDTO memoDTO = new MemoDTO(1L, null, null);
+        String jsonObject = null;
+        jsonObject = objectMapper.writeValueAsString(memoDTO);
+        mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON)
+                .content(jsonObject)).andDo(print()).andExpect(status().is4xxClientError());
+    }
+
 
 
     @Test
