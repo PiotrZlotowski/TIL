@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 public class IllegalArgumentHandler extends BaseExceptionHandler {
 
     public IllegalArgumentHandler() {
-        registerException(IllegalArgumentException.class, "Invalid Argument", "Bad Request", HttpStatus.BAD_REQUEST);
+        registerException(IllegalArgumentException.class, "Bad Request", "Invalid Argument", HttpStatus.BAD_REQUEST);
     }
 }

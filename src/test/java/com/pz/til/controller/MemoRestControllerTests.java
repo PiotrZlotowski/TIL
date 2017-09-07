@@ -2,6 +2,7 @@ package com.pz.til.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pz.til.configuration.InternationalizationConfig;
 import com.pz.til.controller.rest.MemoRestController;
 import com.pz.til.model.MemoDTO;
 import com.pz.til.service.IMemoService;
@@ -10,6 +11,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = MemoRestController.class)
+@WebMvcTest(value = MemoRestController.class, includeFilters = {@Filter(type = FilterType.ASSIGNABLE_TYPE, classes = InternationalizationConfig.class)})
 public class MemoRestControllerTests {
 
     @Autowired
@@ -48,12 +53,10 @@ public class MemoRestControllerTests {
     @Test
     public void shouldReturn400BadRequestWhenNullRequestIsProvided() throws Exception {
         MemoDTO memoDTO = new MemoDTO(1L, null, null);
-        String jsonObject = null;
-        jsonObject = objectMapper.writeValueAsString(memoDTO);
-        mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON)
+        String jsonObject = objectMapper.writeValueAsString(memoDTO);
+        mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON).locale(Locale.UK)
                 .content(jsonObject)).andDo(print()).andExpect(status().is4xxClientError());
     }
-
 
 
     @Test

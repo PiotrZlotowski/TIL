@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by piotr on 09/07/2017.
@@ -25,11 +26,8 @@ public class MemoRestController {
     }
 
     @PostMapping("/addmemo")
-    public void addMemo(@Valid @RequestBody MemoDTO memoDto, BindingResult bindingResult) {
+    public void addMemo(@Valid @RequestBody MemoDTO memoDto) {
 
-        if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException("Provided argument is invalid");
-        }
     }
 
     @GetMapping(value = "/memos", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
