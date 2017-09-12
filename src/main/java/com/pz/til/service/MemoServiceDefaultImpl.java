@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class MemoServiceDefaultImpl implements IMemoService {
@@ -26,8 +25,10 @@ public class MemoServiceDefaultImpl implements IMemoService {
     }
 
     @Override
-    public void addMemo(MemoDTO memoDTO) {
-
+    public MemoDTO addMemo(MemoDTO memoDTO) {
+        Memo memo = beanConverter.convertFromDto(memoDTO);
+        Memo savedMemo = memoRepository.save(memo);
+        return beanConverter.convertFromModel(savedMemo);
     }
 
     @Override

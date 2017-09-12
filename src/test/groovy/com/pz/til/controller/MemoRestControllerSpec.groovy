@@ -18,6 +18,7 @@ import spock.mock.DetachedMockFactory
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest
@@ -36,13 +37,38 @@ class MemoRestControllerSpec extends Specification {
 
     def "Rest endpoint should return 200 when called" () {
         given:
-        def memoDTO = new MemoDTO(1, "Memo content", null)
-        def jsonObject = objectMapper.writeValueAsString(memoDTO)
+        def toSaveMemo = new MemoDTO(1, "Memo content", null)
+        def savedMemo = new MemoDTO(1, "Memo Content", null)
+        def toSaveMemoJsonObject = objectMapper.writeValueAsString(toSaveMemo)
+        def savedMemoJsonObject = objectMapper.writeValueAsString(savedMemo)
+        memoService.addMemo(toSaveMemo) >> savedMemo
         when:
         def mockMvcOperation = mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON)
-                .content(jsonObject)).andDo(print())
+                .content(toSaveMemoJsonObject)).andDo(print())
         then:
-        mockMvcOperation.andExpect(status().is2xxSuccessful())
+        mockMvcOperation.andExpect(status().is2xxSuccessful()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(savedMemoJsonObject))
+    }
+
+
+    def "Rest endpoint should return 400 bad request when null memoContent is provided"() {
+        given: ""
+        def memoDto = new MemoDTO(1, null, null)
+        def jsonObject = objectMapper.writeValueAsString(memoDto)
+        when:
+        def mockRequest = mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON).content(jsonObject)).andDo(print())
+        then:
+        mockRequest.andExpect(status().isBadRequest())
+    }
+
+    def "Rest endpoint should return 400 bad request when empty memoContent is provided"() {
+        given: ""
+        def memoDto = new MemoDTO(1, "", null)
+        def jsonObject = objectMapper.writeValueAsString(memoDto)
+        when:
+        def mockRequest = mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON).content(jsonObject)).andDo(print())
+        then:
+        mockRequest.andExpect(status().isBadRequest())
     }
 
     def "Rest endpoint should return 200 and collection of element when retrieve memo method is called"() {
@@ -59,7 +85,7 @@ class MemoRestControllerSpec extends Specification {
         def resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/rest/memos")).andDo(print())
         then:
         resultActions.andExpect(status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.content().json(mappedStringJson, false)).andReturn();
+                .andExpect(content().json(mappedStringJson, false)).andReturn();
 
     }
 

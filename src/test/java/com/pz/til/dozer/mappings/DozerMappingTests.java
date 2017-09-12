@@ -7,9 +7,11 @@ import com.pz.til.model.Memo;
 import com.pz.til.model.MemoDTO;
 import org.dozer.DozerBeanMapper;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -17,24 +19,24 @@ import java.util.List;
 /**
  * Created by piotr on 17/07/2017.
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = DozerConfig.class)
-public class DozerMappingTests {
+class DozerMappingTests {
 
-    public static final String MEMO_CONTENT = "Memo content";
+     static final String MEMO_CONTENT = "Memo content";
     @Autowired
     private DozerBeanMapper dozerBeanMapper;
 
-    @Test
-    public void whenTheBeanCreatedShouldHaveOneMappingFile() {
+    @org.junit.jupiter.api.Test
+    void whenTheBeanCreatedShouldHaveOneMappingFile() {
         // when
         List<String> mappingFiles = dozerBeanMapper.getMappingFiles();
         // then
         assertThat(mappingFiles).hasSize(1);
     }
 
-    @Test
-    public void whenDtoClassIsGivenShouldBeConvertedToDto() {
+    @org.junit.jupiter.api.Test
+    void whenDtoClassIsGivenShouldBeConvertedToDto() {
         // given
         MemoDTO memoDTO = new MemoDTO();
         memoDTO.setId(1L);
@@ -47,9 +49,8 @@ public class DozerMappingTests {
         assertThat(memo.getTags()).isEqualTo(memoDTO.getTags());
     }
 
-
-    @Test
-    public void whenModelClassIsGivenShouldBeConvetedToDto() {
+    @org.junit.jupiter.api.Test
+    void whenModelClassIsGivenShouldBeConvetedToDto() {
         // given
         Memo memo = new Memo();
         memo.setId(1L);
@@ -60,7 +61,5 @@ public class DozerMappingTests {
         assertThat(memoDTO.getId()).isEqualTo(memo.getId()).isEqualTo(1);
         assertThat(memoDTO.getMemoContent()).isEqualTo(memo.getContent()).isEqualTo(MEMO_CONTENT);
     }
-
-
 
 }

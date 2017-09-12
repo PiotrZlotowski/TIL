@@ -16,7 +16,7 @@ public class InternationalizationConfig {
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.UK); // Set default Locale as US
+        slr.setDefaultLocale(Locale.UK); // Set default Locale as UK
         return slr;
     }
 

@@ -6,7 +6,8 @@ import com.pz.til.configuration.InternationalizationConfig;
 import com.pz.til.controller.rest.MemoRestController;
 import com.pz.til.model.MemoDTO;
 import com.pz.til.service.IMemoService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,10 +16,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,9 +28,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(value = MemoRestController.class, includeFilters = {@Filter(type = FilterType.ASSIGNABLE_TYPE, classes = InternationalizationConfig.class)})
 public class MemoRestControllerTests {
 
@@ -42,12 +43,14 @@ public class MemoRestControllerTests {
     private IMemoService mockMemoService;
 
     @Test
-    public void shouldReturn200WhenAddMemoIsCalled() throws Exception {
-        MemoDTO memoDTO = new MemoDTO(1, "Memo content", null);
-        String jsonObject = null;
-        jsonObject = objectMapper.writeValueAsString(memoDTO);
+    void shouldReturn200WhenAddMemoIsCalled() throws Exception {
+        MemoDTO toSaveMemo = new MemoDTO(0, "Memo content", null);
+        MemoDTO savedMemo = new MemoDTO(1, "Memo content", null);
+        when(mockMemoService.addMemo(toSaveMemo)).thenReturn(savedMemo);
+        String toSaveMemoJsonObject = objectMapper.writeValueAsString(toSaveMemo);
+        String savedMemoJsonObject = objectMapper.writeValueAsString(savedMemo);
         mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON)
-                .content(jsonObject)).andDo(print()).andExpect(status().is2xxSuccessful());
+                .content(toSaveMemoJsonObject)).andDo(print()).andExpect(status().is2xxSuccessful()).andExpect(content().json(savedMemoJsonObject));
     }
 
     @Test
@@ -55,7 +58,15 @@ public class MemoRestControllerTests {
         MemoDTO memoDTO = new MemoDTO(1L, null, null);
         String jsonObject = objectMapper.writeValueAsString(memoDTO);
         mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON).locale(Locale.UK)
-                .content(jsonObject)).andDo(print()).andExpect(status().is4xxClientError());
+                .content(jsonObject)).andDo(print()).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturn400BadRequestWhenEmptyMemoContentIsProvided() throws Exception {
+        MemoDTO memoDTO = new MemoDTO(1L, "", null);
+        String jsonObject = objectMapper.writeValueAsString(memoDTO);
+        mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON).locale(Locale.UK)
+                .content(jsonObject)).andDo(print()).andExpect(status().isBadRequest());
     }
 
 
@@ -71,8 +82,8 @@ public class MemoRestControllerTests {
        // when
         ResultActions resultActions = mockMvc.perform(get("/rest/memos")).andDo(print());
         // then
-        resultActions.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.content().json(mappedStringJson, false)).andReturn();
+        resultActions.andExpect(status().is2xxSuccessful())
+                .andExpect(content().json(mappedStringJson, false)).andReturn();
 
     }
 
@@ -89,8 +100,8 @@ public class MemoRestControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(get("/rest/memos").accept(MediaType.APPLICATION_XML)).andDo(print());
         // then
-        resultActions.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.content().xml(expectedResponse)).andReturn();
+        resultActions.andExpect(status().is2xxSuccessful())
+                .andExpect(content().xml(expectedResponse)).andReturn();
 
     }
 
@@ -103,7 +114,7 @@ public class MemoRestControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(get("/rest/SuggestedMemo").accept(MediaType.APPLICATION_JSON_VALUE)).andDo(print());
         // then
-        resultActions.andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andExpect(MockMvcResultMatchers.content().json(memoDTOAsJson));
+        resultActions.andExpect(status().is2xxSuccessful()).andExpect(content().json(memoDTOAsJson));
     }
 
 }

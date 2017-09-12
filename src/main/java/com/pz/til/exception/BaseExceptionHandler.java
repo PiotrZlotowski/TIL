@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,13 +19,11 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Log
-public abstract class BaseExceptionHandler {
+@ControllerAdvice
+public class BaseExceptionHandler {
 
     private static final ExceptionMapping DEFAULT = new ExceptionMapping("SERVER_ERROR", "Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
     private final Map<Class, ExceptionMapping> mappedExceptions = new HashMap<>();
-
-    public BaseExceptionHandler() {
-    }
 
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody

@@ -3,9 +3,9 @@ package com.pz.til.service.suggestion;
 import com.pz.til.model.Memo;
 import com.pz.til.repository.IMemoRepository;
 import io.vavr.control.Option;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -17,16 +17,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-public class MemoSuggestionRandomStrategyTests {
+//@RunWith(SpringRunner.class)
+class MemoSuggestionRandomStrategyTests {
 
 
     private MemoSuggestionStrategy memoSuggestionStrategy;
     private IMemoRepository memoRepository;
     private Random random;
 
-    @Before
-    public void memoSuggestionInitialization() {
+    @BeforeEach
+    void memoSuggestionInitialization() {
         memoRepository = mock(IMemoRepository.class);
         random = mock(Random.class);
         memoSuggestionStrategy = new SuggestRandomMemoStrategy(memoRepository, random);
@@ -49,7 +49,7 @@ public class MemoSuggestionRandomStrategyTests {
     }
 
     @Test
-    public void shouldReturnEmptyOptionalWhenNoMemosAreSaved() {
+    void shouldReturnEmptyOptionalWhenNoMemosAreSaved() {
         // given
         when(memoRepository.findAll()).thenReturn(null);
         // when

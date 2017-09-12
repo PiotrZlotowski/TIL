@@ -2,9 +2,7 @@ package com.pz.til.controller.rest;
 
 import com.pz.til.model.MemoDTO;
 import com.pz.til.service.IMemoService;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,7 +24,8 @@ public class MemoRestController {
     }
 
     @PostMapping("/addmemo")
-    public void addMemo(@Valid @RequestBody MemoDTO memoDto) {
+    public MemoDTO addMemo(@Valid @RequestBody MemoDTO memoDto) {
+        return memoService.addMemo(memoDto);
 
     }
 
