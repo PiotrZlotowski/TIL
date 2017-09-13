@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
@@ -33,14 +32,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(value = MemoRestController.class, includeFilters = {@Filter(type = FilterType.ASSIGNABLE_TYPE, classes = InternationalizationConfig.class)})
-public class MemoRestControllerTests {
+class MemoRestControllerTests {
 
-    @Autowired
     private MockMvc mockMvc;
-    @Autowired
     private ObjectMapper objectMapper;
     @MockBean
     private IMemoService mockMemoService;
+
+
+    @Autowired
+    MemoRestControllerTests(MockMvc mockMvc, ObjectMapper objectMapper) {
+        this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
+    }
+
 
     @Test
     void shouldReturn200WhenAddMemoIsCalled() throws Exception {
@@ -54,7 +59,7 @@ public class MemoRestControllerTests {
     }
 
     @Test
-    public void shouldReturn400BadRequestWhenNullRequestIsProvided() throws Exception {
+    void shouldReturn400BadRequestWhenNullRequestIsProvided() throws Exception {
         MemoDTO memoDTO = new MemoDTO(1L, null, null);
         String jsonObject = objectMapper.writeValueAsString(memoDTO);
         mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON).locale(Locale.UK)
@@ -62,7 +67,7 @@ public class MemoRestControllerTests {
     }
 
     @Test
-    public void shouldReturn400BadRequestWhenEmptyMemoContentIsProvided() throws Exception {
+    void shouldReturn400BadRequestWhenEmptyMemoContentIsProvided() throws Exception {
         MemoDTO memoDTO = new MemoDTO(1L, "", null);
         String jsonObject = objectMapper.writeValueAsString(memoDTO);
         mockMvc.perform(post("/rest/addmemo").contentType(MediaType.APPLICATION_JSON).locale(Locale.UK)
@@ -71,7 +76,7 @@ public class MemoRestControllerTests {
 
 
     @Test
-    public void shouldReturn200AndCollectionOfElementsWhenRetrieveMemosIsCalledWithJson() throws Exception {
+    void shouldReturn200AndCollectionOfElementsWhenRetrieveMemosIsCalledWithJson() throws Exception {
        // given
         MemoDTO memo1 = new MemoDTO(1, "Memo content1", null);
         MemoDTO memo2 = new MemoDTO(2, "Memo content2", null);
@@ -89,7 +94,7 @@ public class MemoRestControllerTests {
 
 
     @Test
-    public void shouldReturn200AndCollectionOfElementsWhenRetrieveMemosIsCalledWithXml() throws Exception {
+    void shouldReturn200AndCollectionOfElementsWhenRetrieveMemosIsCalledWithXml() throws Exception {
         // given
         MemoDTO memo1 = new MemoDTO(1, "Memo content1", null);
         MemoDTO memo2 = new MemoDTO(2, "Memo content2", null);
@@ -106,7 +111,7 @@ public class MemoRestControllerTests {
     }
 
     @Test
-    public void shouldReturn200AndOneRecommendedMemoWhenSuggestedMemoIsCalledWithJson() throws Exception {
+    void shouldReturn200AndOneRecommendedMemoWhenSuggestedMemoIsCalledWithJson() throws Exception {
         // given
         MemoDTO memoDTO = new MemoDTO(1, "Suggested Memo Content", null);
         when(mockMemoService.retrieveSuggestedMemo()).thenReturn(memoDTO);
