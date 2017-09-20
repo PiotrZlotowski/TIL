@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode
-public class MemoDTO {
+public class MemoDTO implements Serializable{
 
     private long id;
     @NotNull

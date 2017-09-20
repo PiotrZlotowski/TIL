@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @RedisHash("Memos")
-public class Memo {
+public class Memo implements Serializable{
     @Id
     private long id;
     private String content;

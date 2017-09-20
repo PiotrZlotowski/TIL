@@ -1,5 +1,6 @@
 package com.pz.til.service;
 
+import com.pz.til.jms.producer.GenericProducer;
 import com.pz.til.model.Memo;
 import com.pz.til.model.MemoDTO;
 import com.pz.til.repository.IMemoRepository;
@@ -16,18 +17,22 @@ public class MemoServiceDefaultImpl implements IMemoService {
     private IBeanConverter<MemoDTO, Memo> beanConverter;
     private IMemoRepository memoRepository;
     private MemoSuggestionStrategy memoSuggestionStrategy;
+    private GenericProducer genericProducer;
 
 
-    public MemoServiceDefaultImpl(IBeanConverter<MemoDTO, Memo> beanConverter, IMemoRepository memoRepository, MemoSuggestionStrategy memoSuggestionStrategy) {
+    public MemoServiceDefaultImpl(IBeanConverter<MemoDTO, Memo> beanConverter, IMemoRepository memoRepository,
+                                  MemoSuggestionStrategy memoSuggestionStrategy, GenericProducer genericProducer) {
         this.beanConverter = beanConverter;
         this.memoRepository = memoRepository;
         this.memoSuggestionStrategy = memoSuggestionStrategy;
+        this.genericProducer = genericProducer;
     }
 
     @Override
     public MemoDTO addMemo(MemoDTO memoDTO) {
         Memo memo = beanConverter.convertFromDto(memoDTO);
         Memo savedMemo = memoRepository.save(memo);
+        genericProducer.sendMessage("MEMO_CREATED_CHANNEL", savedMemo);
         return beanConverter.convertFromModel(savedMemo);
     }
 
