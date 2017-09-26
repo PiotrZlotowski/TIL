@@ -1,10 +1,8 @@
 package com.pz.til.dozer.mappings;
 
-import com.pz.til.configuration.DozerConfig;
 import com.pz.til.model.Memo;
 import com.pz.til.model.MemoDTO;
 import org.dozer.DozerBeanMapper;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,7 +22,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  * Created by piotr on 17/07/2017.
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = DozerConfig.class)
+@SpringBootTest
 @DisplayName("Dozer Spring Bean Test ")
 class DozerMappingTests {
 
