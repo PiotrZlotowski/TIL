@@ -13,8 +13,12 @@ services:
     - "8080:8080"
     links:
       - redis
+      - activemq
     environment:
     - TIL_REDIS_HOST=redis
-
+    - TIL_ACTIVEMQ_HOST=activemq
+  activemq:
+    image: webcenter/activemq
+    container_name: "activemq"
 
 
