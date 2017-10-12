@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class MemoServiceDefaultImpl implements IMemoService {
@@ -38,7 +39,9 @@ public class MemoServiceDefaultImpl implements IMemoService {
 
     @Override
     public List<MemoDTO> getAllMemos() {
-        return null;
+        List<Memo> allMemos = memoRepository.findAll();
+        List<MemoDTO> memoDTOs = allMemos.stream().map(beanConverter::convertFromModel).collect(Collectors.toList());
+        return memoDTOs;
     }
 
     @Override

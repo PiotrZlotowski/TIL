@@ -38,6 +38,7 @@ public class BaseExceptionHandler {
     @ExceptionHandler(Throwable.class)
     @ResponseBody
     public ErrorResponse handleThrowable(final Throwable throwable, HttpServletResponse response) {
+        log.info("Incoming original exception: " + throwable.getMessage());
         ExceptionMapping exceptionMapping = mappedExceptions.getOrDefault(throwable.getClass(), DEFAULT);
         response.setStatus(exceptionMapping.status.value());
         log.info(String.format("Handling error: %s, %s with reason the %s", exceptionMapping.message, exceptionMapping.reason, exceptionMapping.status));
