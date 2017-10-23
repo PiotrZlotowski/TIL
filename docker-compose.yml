@@ -11,6 +11,7 @@ services:
     image: pz/til
     ports:
     - "8080:8080"
+    - "5005:5005"
     links:
       - redis
       - activemq
