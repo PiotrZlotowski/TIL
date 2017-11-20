@@ -1,12 +1,11 @@
-sudo: required
 language: java
+sudo: required
 jdk:
-  - oraclejdk8
+- oraclejdk8
 services:
-  - docker
-
+- docker
 addons:
-  sonarcloud:
-    organization: "piotrzlotowski-github"
+    sonarcloud:
+        organization: piotrzlotowski-github
 script:
-   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
