@@ -8,5 +8,5 @@ services:
 addons:
   sonarcloud:
     organization: "piotrzlotowski-github"
- script:
+script:
    - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
