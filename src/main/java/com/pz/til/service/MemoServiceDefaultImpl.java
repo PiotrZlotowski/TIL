@@ -48,4 +48,10 @@ public class MemoServiceDefaultImpl implements IMemoService {
         Option<Memo> memoOptional = memoSuggestionStrategy.retrieveSuggestedMemo();
         return memoOptional.map(beanConverter::convertFromModel).getOrElseThrow(NoSuchElementException::new);
     }
+
+    @Override
+    public MemoDTO findOne(long id) {
+        Memo memo = memoRepository.findOne(id);
+        return beanConverter.convertFromModel(memo);
+    }
 }

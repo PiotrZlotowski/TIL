@@ -36,7 +36,7 @@ public class MemoRestController {
 
     @GetMapping("/memo/{id}")
     public MemoDTO retrieveSelectedMemo(@PathVariable("id") long id) {
-        return null;
+        return memoService.findOne(id);
     }
 
 

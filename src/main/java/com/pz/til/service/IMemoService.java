@@ -10,4 +10,5 @@ public interface IMemoService {
     MemoDTO addMemo(MemoDTO memoDTO);
     List<MemoDTO> getAllMemos();
     MemoDTO retrieveSuggestedMemo();
+    MemoDTO findOne(long id);
 }
