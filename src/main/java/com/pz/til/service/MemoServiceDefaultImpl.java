@@ -40,14 +40,12 @@ public class MemoServiceDefaultImpl implements IMemoService {
     @Override
     public List<MemoDTO> getAllMemos() {
         List<Memo> allMemos = memoRepository.findAll();
-        List<MemoDTO> memoDTOs = allMemos.stream().map(beanConverter::convertFromModel).collect(Collectors.toList());
-        return memoDTOs;
+        return allMemos.stream().map(beanConverter::convertFromModel).collect(Collectors.toList());
     }
 
     @Override
     public MemoDTO retrieveSuggestedMemo() {
         Option<Memo> memoOptional = memoSuggestionStrategy.retrieveSuggestedMemo();
-        MemoDTO memoDTO = memoOptional.map(beanConverter::convertFromModel).getOrElseThrow(NoSuchElementException::new);
-        return memoDTO;
+        return memoOptional.map(beanConverter::convertFromModel).getOrElseThrow(NoSuchElementException::new);
     }
 }

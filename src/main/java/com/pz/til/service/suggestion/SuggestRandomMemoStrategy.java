@@ -6,7 +6,6 @@ import io.vavr.control.Option;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -29,8 +28,7 @@ public class SuggestRandomMemoStrategy implements MemoSuggestionStrategy {
             return Option.none();
         }
         int memoRandomIndex = getRandomMemoIndex(allMemos);
-        Option<Memo> optionalMemo = Option.of(allMemos.get(memoRandomIndex));
-        return optionalMemo;
+        return Option.of(allMemos.get(memoRandomIndex));
     }
 
     private int getRandomMemoIndex(List<Memo> allMemos) {
