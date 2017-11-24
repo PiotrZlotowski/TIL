@@ -20,6 +20,11 @@ public class DefaultSpringEmailService implements IEmailService {
 
     @Override
     public void sendEmailMessage(String to, String subject, String emailContent) {
+
+        if (hasInvalidEmailDetails(to, subject, emailContent)) {
+            throw new IllegalArgumentException("Please provide correct e-mail details.");
+        }
+
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
@@ -30,5 +35,13 @@ public class DefaultSpringEmailService implements IEmailService {
         } catch (MessagingException e) {
             log.info(() -> "Exception caught" + e);
         }
+    }
+
+    private boolean hasInvalidEmailDetails(String to, String subject, String emailContent) {
+        boolean hasNullEmailParameters = (to == null || subject == null || emailContent == null);
+        if (hasNullEmailParameters) {
+            return true;
+        }
+        return (to.isEmpty() || subject.isEmpty() || emailContent.isEmpty());
     }
 }

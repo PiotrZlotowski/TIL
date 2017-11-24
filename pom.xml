@@ -26,6 +26,7 @@
 		<gmaven-plugin.version>1.4</gmaven-plugin.version>
 		<groovy.version>2.4.9</groovy.version>
 		<thymeleaf.version>3.0.8.RELEASE</thymeleaf.version>
+		<greenmail.version>1.5.5</greenmail.version>
 	</properties>
 
 	<dependencies>
@@ -169,6 +170,27 @@
 			<groupId>org.jolokia</groupId>
 			<artifactId>jolokia-core</artifactId>
 			<version>1.3.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.icegreen</groupId>
+			<artifactId>greenmail</artifactId>
+			<version>${greenmail.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.icegreen</groupId>
+			<artifactId>greenmail-spring</artifactId>
+			<version>${greenmail.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.icegreen</groupId>
+			<artifactId>greenmail-standalone</artifactId>
+			<version>${greenmail.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.icegreen</groupId>
+			<artifactId>greenmail-parent</artifactId>
+			<version>${greenmail.version}</version>
+			<type>pom</type>
 		</dependency>
 	</dependencies>
 	<build>
