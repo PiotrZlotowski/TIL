@@ -73,8 +73,6 @@ class MailIntegrationTests {
     }
 
 
-
-
     @TestConfiguration
     static class MockMailServerConfiguration {
 

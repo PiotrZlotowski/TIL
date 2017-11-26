@@ -4,20 +4,14 @@ import com.pz.til.model.Memo;
 import com.pz.til.repository.IMemoRepository;
 import io.vavr.control.Option;
 import junit.extension.MockitoExtension;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Random;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 //@RunWith(SpringRunner.class)
@@ -50,9 +44,19 @@ class MemoSuggestionRandomStrategyTests {
     }
 
     @Test
-    void shouldReturnEmptyOptionalWhenNoMemosAreSaved(@Mock IMemoRepository memoRepository) {
+    void shouldReturnEmptyOptionalWhenNullIsReturned(@Mock IMemoRepository memoRepository) {
         // given
         when(memoRepository.findAll()).thenReturn(null);
+        // when
+        Option<Memo> memo = memoSuggestionStrategy.retrieveSuggestedMemo();
+        // then
+        assertThat(memo).isEqualTo(Option.none());
+    }
+
+    @Test
+    void shouldReturnEmptyOptionalWhenResultsAreNotInDatabase(@Mock IMemoRepository memoRepository) {
+        // given
+        when(memoRepository.findAll()).thenReturn(Collections.emptyList());
         // when
         Option<Memo> memo = memoSuggestionStrategy.retrieveSuggestedMemo();
         // then
