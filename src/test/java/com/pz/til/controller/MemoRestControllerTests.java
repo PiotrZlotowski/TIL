@@ -6,6 +6,7 @@ import com.pz.til.configuration.InternationalizationConfig;
 import com.pz.til.controller.rest.MemoRestController;
 import com.pz.til.model.MemoDTO;
 import com.pz.til.service.IMemoService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,12 +25,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(value = MemoRestController.class, includeFilters = {@Filter(type = FilterType.ASSIGNABLE_TYPE, classes = InternationalizationConfig.class)})
@@ -135,6 +137,19 @@ class MemoRestControllerTests {
         ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.get("/rest//memo/{id}", 1));
         // then
         perform.andExpect(status().is2xxSuccessful()).andExpect(content().json(memoDTOAsJson));
+        verify(mockMemoService).findOne(1);
+    }
+
+    @Test
+    void shouldReturnErrorJsonWhenRedisConnectionFailureExceptionIsThrown() throws Exception {
+        // given
+        when(mockMemoService.findOne(1)).thenThrow(new RedisConnectionFailureException("Connection timeout test!"));
+        // when
+        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.get("/rest//memo/{id}", 1));
+        // then
+        perform.andExpect(status().is5xxServerError())
+                .andExpect(jsonPath("$.message", is("SERVER_ERROR")))
+                .andExpect(jsonPath("$.fieldsErrors", Matchers.empty()));
         verify(mockMemoService).findOne(1);
     }
 
