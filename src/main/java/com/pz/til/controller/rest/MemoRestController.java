@@ -23,7 +23,7 @@ public class MemoRestController {
     }
 
     @PostMapping("/addmemo")
-    public MemoDTO addMemo(@Valid @RequestBody MemoDTO memoDto) {
+    public @ResponseBody MemoDTO addMemo(@Valid @RequestBody MemoDTO memoDto) {
         return memoService.addMemo(memoDto);
 
     }
