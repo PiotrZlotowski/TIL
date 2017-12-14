@@ -16,11 +16,20 @@ services:
     links:
       - redis
       - activemq
+      - mail
     environment:
     - TIL_REDIS_HOST=redis
     - TIL_ACTIVEMQ_HOST=activemq
+    - TIL_MAIL_HOST=mail
   activemq:
     image: webcenter/activemq
     container_name: "activemq"
+  mail:
+    image: tophfr/mailcatcher
+    ports:
+      - "1080:80"
+      - "25"
+    container_name: "mail"
+
 
 
