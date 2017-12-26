@@ -1,0 +1,39 @@
+@startuml
+autonumber
+actor Client
+
+activate Controller
+Client -> Controller : addMemo()
+create MemoValidator
+Controller -> MemoValidator : <<create>>
+Controller -> MemoValidator : validateMemo()
+MemoValidator -> MemoValidator : Validation of MemoDTO
+destroy MemoValidator
+alt valid memo
+    Controller -> Service : addMemo()
+    activate Service
+    activate BeanConverter
+    Service -> BeanConverter : convertFromDto()
+    Service <-- BeanConverter : Memo from MemoDTO
+    Service -> MemoRepository : save()
+    database Redis
+    MemoRepository -> Redis : persistData
+    MemoRepository <-- Redis : persistedData
+    Service <-- MemoRepository : Saved Memo
+    alt isJMSEnabled
+        Service -> GenericProducer : sendMessage()
+    end
+    ||||
+    Service -> BeanConverter : convertFromModel()
+    Service <-- BeanConverter : MemoDTO from Memo
+    destroy BeanConverter
+    Controller  <-- Service : MemoDTO
+    Client <-- Controller : MemoDTO
+    else
+    Controller <-- Service: throw new Exception()
+    Client <-- Controller: Display error
+end
+
+deactivate Service
+deactivate Controller
+@enduml
