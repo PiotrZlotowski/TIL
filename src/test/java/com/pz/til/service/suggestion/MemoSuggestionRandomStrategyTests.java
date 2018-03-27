@@ -28,38 +28,38 @@ class MemoSuggestionRandomStrategyTests {
     }
 
 
-    @Test
-    void shouldReturnMockedMemoWhenRetrieveSuggestedMemoIsCalled(@Mock IMemoRepository memoRepository, @Mock Random random) {
-        // given
-        List<Memo> memos = new ArrayList<>();
-        Memo memo = new Memo(1, "Memo content", null);
-        memos.add(memo);
-        when(memoRepository.findAll()).thenReturn(memos);
-        when(random.nextInt(memos.size())).thenReturn(0);
-        // when
-        Option<Memo> memoOptional = memoSuggestionStrategy.retrieveSuggestedMemo();
-        Memo memoFromOptional = memoOptional.getOrElseThrow(NoSuchElementException::new);
-        // then
-        assertThat(memoFromOptional).isEqualTo(memo);
-    }
-
-    @Test
-    void shouldReturnEmptyOptionalWhenNullIsReturned(@Mock IMemoRepository memoRepository) {
-        // given
-        when(memoRepository.findAll()).thenReturn(null);
-        // when
-        Option<Memo> memo = memoSuggestionStrategy.retrieveSuggestedMemo();
-        // then
-        assertThat(memo).isEqualTo(Option.none());
-    }
-
-    @Test
-    void shouldReturnEmptyOptionalWhenResultsAreNotInDatabase(@Mock IMemoRepository memoRepository) {
-        // given
-        when(memoRepository.findAll()).thenReturn(Collections.emptyList());
-        // when
-        Option<Memo> memo = memoSuggestionStrategy.retrieveSuggestedMemo();
-        // then
-        assertThat(memo).isEqualTo(Option.none());
-    }
+//    @Test
+//    void shouldReturnMockedMemoWhenRetrieveSuggestedMemoIsCalled(@Mock IMemoRepository memoRepository, @Mock Random random) {
+//        // given
+//        List<Memo> memos = new ArrayList<>();
+//        Memo memo = new Memo(1, "Memo content", null);
+//        memos.add(memo);
+//        when(memoRepository.findAll()).thenReturn(memos);
+//        when(random.nextInt(memos.size())).thenReturn(0);
+//        // when
+//        Option<Memo> memoOptional = memoSuggestionStrategy.retrieveSuggestedMemo();
+//        Memo memoFromOptional = memoOptional.getOrElseThrow(NoSuchElementException::new);
+//        // then
+//        assertThat(memoFromOptional).isEqualTo(memo);
+//    }
+//
+//    @Test
+//    void shouldReturnEmptyOptionalWhenNullIsReturned(@Mock IMemoRepository memoRepository) {
+//        // given
+//        when(memoRepository.findAll()).thenReturn(null);
+//        // when
+//        Option<Memo> memo = memoSuggestionStrategy.retrieveSuggestedMemo();
+//        // then
+//        assertThat(memo).isEqualTo(Option.none());
+//    }
+//
+//    @Test
+//    void shouldReturnEmptyOptionalWhenResultsAreNotInDatabase(@Mock IMemoRepository memoRepository) {
+//        // given
+//        when(memoRepository.findAll()).thenReturn(Collections.emptyList());
+//        // when
+//        Option<Memo> memo = memoSuggestionStrategy.retrieveSuggestedMemo();
+//        // then
+//        assertThat(memo).isEqualTo(Option.none());
+//    }
 }

@@ -5,12 +5,9 @@ import com.pz.til.model.Memo;
 import com.pz.til.model.MemoDTO;
 import com.pz.til.repository.IMemoRepository;
 import com.pz.til.service.suggestion.MemoSuggestionStrategy;
-import io.vavr.control.Option;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class MemoServiceDefaultImpl implements IMemoService {
@@ -30,28 +27,27 @@ public class MemoServiceDefaultImpl implements IMemoService {
     }
 
     @Override
-    public MemoDTO addMemo(MemoDTO memoDTO) {
+    public Mono<MemoDTO> addMemo(MemoDTO memoDTO) {
         Memo memo = beanConverter.convertFromDto(memoDTO);
-        Memo savedMemo = memoRepository.save(memo);
-        genericProducer.sendMessage("MEMO_CREATED_CHANNEL", savedMemo);
-        return beanConverter.convertFromModel(savedMemo);
+        Mono<MemoDTO> monoMemo = memoRepository.save(memo).doOnNext(nextMemo -> genericProducer.sendMessage("MEMO_CREATED_CHANNEL", nextMemo))
+                .map(m -> beanConverter.convertFromModel(m));
+        return monoMemo;
     }
 
     @Override
-    public List<MemoDTO> getAllMemos() {
-        List<Memo> allMemos = memoRepository.findAll();
-        return allMemos.stream().map(beanConverter::convertFromModel).collect(Collectors.toList());
+    public Flux<MemoDTO> getAllMemos() {
+        Flux<Memo> allMemos = memoRepository.findAll();
+        return allMemos.map(beanConverter::convertFromModel);
     }
 
     @Override
-    public MemoDTO retrieveSuggestedMemo() {
-        Option<Memo> memoOptional = memoSuggestionStrategy.retrieveSuggestedMemo();
-        return memoOptional.map(beanConverter::convertFromModel).getOrElseThrow(NoSuchElementException::new);
+    public Mono<MemoDTO> retrieveSuggestedMemo() {
+        Mono<Memo> suggestedMemo = memoSuggestionStrategy.retrieveSuggestedMemo();
+        return suggestedMemo.map(beanConverter::convertFromModel);
     }
 
     @Override
-    public MemoDTO findOne(long id) {
-        Memo memo = memoRepository.findOne(id);
-        return beanConverter.convertFromModel(memo);
+    public Mono<MemoDTO> findOne(long id) {
+        return memoRepository.findById(id).map(beanConverter::convertFromModel);
     }
 }

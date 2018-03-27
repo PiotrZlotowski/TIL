@@ -1,9 +1,9 @@
 package com.pz.til.service.suggestion;
 
 import com.pz.til.model.Memo;
-import io.vavr.control.Option;
+import reactor.core.publisher.Mono;
 
 
 public interface MemoSuggestionStrategy {
-    Option<Memo> retrieveSuggestedMemo();
+    Mono<Memo> retrieveSuggestedMemo();
 }

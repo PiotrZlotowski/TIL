@@ -1,14 +1,14 @@
 package com.pz.til.service;
 
 import com.pz.til.model.MemoDTO;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 
 public interface IMemoService {
 
-    MemoDTO addMemo(MemoDTO memoDTO);
-    List<MemoDTO> getAllMemos();
-    MemoDTO retrieveSuggestedMemo();
-    MemoDTO findOne(long id);
+    Mono<MemoDTO> addMemo(MemoDTO memoDTO);
+    Flux<MemoDTO> getAllMemos();
+    Mono<MemoDTO> retrieveSuggestedMemo();
+    Mono<MemoDTO> findOne(long id);
 }

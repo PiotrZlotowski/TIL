@@ -1,4 +1,4 @@
-FROM openjdk:latest
+FROM openjdk:9.0-jdk
 MAINTAINER Piotr Zlotowski
 RUN mkdir -p /var/til-app
 COPY target/til-0.0.1-SNAPSHOT.jar /var/til-app/

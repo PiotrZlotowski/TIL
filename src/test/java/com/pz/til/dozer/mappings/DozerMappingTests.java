@@ -2,18 +2,21 @@ package com.pz.til.dozer.mappings;
 
 import com.pz.til.model.Memo;
 import com.pz.til.model.MemoDTO;
+import org.assertj.core.api.ObjectArrayAssert;
 import org.dozer.DozerBeanMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -49,7 +52,11 @@ class DozerMappingTests {
     @DisplayName("and based on that is able to")
     class MappingTests {
         @ParameterizedTest(name = PARAMETERIZED_TEST_MESSAGE)
-        @CsvSource({"1, Memo content", "2, Memo content 2", "3, Memo content 3"})
+        /*
+            static method cannot be used with inner classes and that's the reason I decided to go for @ArgumentsSource
+            instead of @MethodSource which was improved in Junit 5.1 and now doesn't require
+         */
+        @ArgumentsSource(CustomArgumentProvider.class)
         @DisplayName("map DTO class to model class")
         void whenDtoClassIsGivenShouldBeConvertedToDto(int id, String memoContent) {
             assumeTrue(!dozerBeanMapper.getMappingFiles().isEmpty(), () -> "Dozer Bean Mapper is empty");
@@ -80,6 +87,14 @@ class DozerMappingTests {
             // then
             assertThat(memoDTO.getId()).isEqualTo(memo.getId()).isEqualTo(id);
             assertThat(memoDTO.getMemoContent()).isEqualTo(memo.getContent()).isEqualTo(memoContent);
+        }
+    }
+
+    static class CustomArgumentProvider implements ArgumentsProvider {
+
+        @Override
+        public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+            return Stream.of(Arguments.of(1, "Memo content"), Arguments.of(2, "Memo content 2"), Arguments.of(3, "Memo content 3"));
         }
     }
 }

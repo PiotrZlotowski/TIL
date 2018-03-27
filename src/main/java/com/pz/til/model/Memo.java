@@ -2,10 +2,7 @@ package com.pz.til.model;
 
 import com.pz.til.model.builder.MemoContentBuilder;
 import com.pz.til.model.builder.MemoOptionalFieldsBuilder;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -17,17 +14,22 @@ import java.util.function.Consumer;
 /**
  * Created by piotr on 11/07/2017.
  */
-@AllArgsConstructor
-@Data
-@NoArgsConstructor
 @EqualsAndHashCode
+@Getter
+@Setter
+@NoArgsConstructor
 @RedisHash("Memos")
-public class Memo implements Serializable{
+public class Memo implements Serializable {
     @Id
     private long id;
     private String content;
     private List<Tag> tags;
 
+    public Memo(String id, String content, List<Tag> tags) {
+        this.id = Long.valueOf(id);
+        this.content = content;
+        this.tags = tags;
+    }
 
     public static class MemoBuilder implements MemoContentBuilder, MemoOptionalFieldsBuilder<Memo> {
 

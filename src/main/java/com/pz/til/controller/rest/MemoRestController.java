@@ -4,6 +4,8 @@ import com.pz.til.model.MemoDTO;
 import com.pz.til.service.IMemoService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,25 +25,25 @@ public class MemoRestController {
     }
 
     @PostMapping("/addmemo")
-    public @ResponseBody MemoDTO addMemo(@Valid @RequestBody MemoDTO memoDto) {
+    public @ResponseBody Mono<MemoDTO> addMemo(@Valid @RequestBody MemoDTO memoDto) {
         return memoService.addMemo(memoDto);
 
     }
 
     @GetMapping(value = "/memos", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<MemoDTO> retrieveMemos() {
+    public Flux<MemoDTO> retrieveMemos() {
          return memoService.getAllMemos();
     }
 
 
     @GetMapping("/memo/{id}")
-    public MemoDTO retrieveSelectedMemo(@PathVariable("id") long id) {
+    public Mono<MemoDTO> retrieveSelectedMemo(@PathVariable("id") long id) {
         return memoService.findOne(id);
     }
 
 
     @GetMapping("/SuggestedMemo")
-    public MemoDTO suggestedMemo() {
+    public Mono<MemoDTO> suggestedMemo() {
         return memoService.retrieveSuggestedMemo();
     }
 

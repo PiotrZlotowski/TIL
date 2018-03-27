@@ -4,6 +4,8 @@ import com.pz.til.model.Memo;
 import com.pz.til.repository.IMemoRepository;
 import io.vavr.control.Option;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Random;
@@ -21,14 +23,10 @@ public class SuggestRandomMemoStrategy implements MemoSuggestionStrategy {
 
 
     @Override
-    public Option<Memo> retrieveSuggestedMemo() {
-        List<Memo> allMemos = memoRepository.findAll();
+    public Mono<Memo> retrieveSuggestedMemo() {
+        Flux<Memo> allMemos = memoRepository.findAll();
 
-        if (allMemos == null || allMemos.isEmpty()) {
-            return Option.none();
-        }
-        int memoRandomIndex = getRandomMemoIndex(allMemos);
-        return Option.of(allMemos.get(memoRandomIndex));
+        return allMemos.collectList().map(memoList -> memoList.get(getRandomMemoIndex(memoList)));
     }
 
     private int getRandomMemoIndex(List<Memo> allMemos) {
