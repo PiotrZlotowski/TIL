@@ -8,8 +8,6 @@ import reactor.core.publisher.Mono;
  * Created by piotr on 12/07/2017.
  */
 public interface IMemoRepository {
-    String MEMO_KEY = "MEMO";
-
     Mono<Memo> save(Memo memo);
 
     Flux<Memo> findAll();

@@ -1,7 +1,9 @@
 package com.pz.til.model.builder;
 
+import com.pz.til.model.Memo;
+
 public interface MemoContentBuilder {
 
-    MemoOptionalFieldsBuilder<?> withContent(String content);
+    MemoOptionalFieldsBuilder<Memo> withContent(String content);
 
 }

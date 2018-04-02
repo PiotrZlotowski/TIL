@@ -15,6 +15,7 @@ import java.util.Map;
 @Log
 public class RedisMemoRepository implements IMemoRepository {
 
+    private static final String MEMO_KEY = "MEMO";
     private ReactiveRedisTemplate reactiveRedisTemplate;
     private ReactiveHashOperations<String, Long, Memo> reactiveHashOperations;
 
@@ -46,7 +47,6 @@ public class RedisMemoRepository implements IMemoRepository {
 
     @Override
     public Mono<Memo> findById(long id) {
-        Mono<Memo> memoMono = reactiveHashOperations.get(MEMO_KEY, id);
-        return memoMono;
+        return reactiveHashOperations.get(MEMO_KEY, id);
     }
 }

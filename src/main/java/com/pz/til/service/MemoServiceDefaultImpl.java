@@ -29,9 +29,8 @@ public class MemoServiceDefaultImpl implements IMemoService {
     @Override
     public Mono<MemoDTO> addMemo(MemoDTO memoDTO) {
         Memo memo = beanConverter.convertFromDto(memoDTO);
-        Mono<MemoDTO> monoMemo = memoRepository.save(memo).doOnNext(nextMemo -> genericProducer.sendMessage("MEMO_CREATED_CHANNEL", nextMemo))
+        return memoRepository.save(memo).doOnNext(nextMemo -> genericProducer.sendMessage("MEMO_CREATED_CHANNEL", nextMemo))
                 .map(m -> beanConverter.convertFromModel(m));
-        return monoMemo;
     }
 
     @Override
