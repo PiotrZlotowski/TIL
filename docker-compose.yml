@@ -7,29 +7,40 @@ services:
     volumes:
     - /data
     container_name: "redis"
+    networks:
+      - backend
   til:
     image: pz/til
     ports:
     - "8080:8080"
     - "5005:5005"
     - "9010:9010"
-    links:
-      - redis
-      - activemq
-      - mail
     environment:
     - TIL_REDIS_HOST=redis
     - TIL_ACTIVEMQ_HOST=activemq
     - TIL_MAIL_HOST=mail
+    networks:
+      - backend
+      - frontend
   activemq:
     image: webcenter/activemq
     container_name: "activemq"
+    networks:
+      - backend
   mail:
     image: tophfr/mailcatcher
     ports:
       - "1080:80"
       - "25"
     container_name: "mail"
+    networks:
+      - backend
+
+networks:
+  frontend:
+  backend:
+    internal: true
+
 
 
 
