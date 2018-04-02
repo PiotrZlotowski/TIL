@@ -1,0 +1,23 @@
+version: '3'
+services:
+  redis:
+    image: redis
+    ports:
+    - "6379:6379"
+    volumes:
+    - /data
+    container_name: "redis"
+  activemq:
+    image: webcenter/activemq
+    container_name: "activemq"
+    ports:
+      - "61616:61616"
+  mail:
+    image: tophfr/mailcatcher
+    ports:
+      - "1080:80"
+      - "2025:25"
+    container_name: "mail"
+
+
+
