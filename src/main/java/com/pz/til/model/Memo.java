@@ -2,7 +2,10 @@ package com.pz.til.model;
 
 import com.pz.til.model.builder.MemoContentBuilder;
 import com.pz.til.model.builder.MemoOptionalFieldsBuilder;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 

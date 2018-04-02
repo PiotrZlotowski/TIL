@@ -2,7 +2,6 @@ package com.pz.til.service.suggestion;
 
 import com.pz.til.model.Memo;
 import com.pz.til.repository.IMemoRepository;
-import io.vavr.control.Option;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
