@@ -2,7 +2,9 @@ package com.pz.til.controller.rest;
 
 import com.pz.til.model.MemoDTO;
 import com.pz.til.service.IMemoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -24,6 +26,7 @@ public class MemoRestController {
     }
 
     @PostMapping("/addmemo")
+    @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody Mono<MemoDTO> addMemo(@Valid @RequestBody MemoDTO memoDto) {
         return memoService.addMemo(memoDto);
 
@@ -36,14 +39,18 @@ public class MemoRestController {
 
 
     @GetMapping("/memo/{id}")
-    public Mono<MemoDTO> retrieveSelectedMemo(@PathVariable("id") long id) {
-        return memoService.findOne(id);
+    public Mono<ResponseEntity<MemoDTO>> retrieveSelectedMemo(@PathVariable("id") long id) {
+        return memoService.findOne(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
 
     @GetMapping("/SuggestedMemo")
-    public Mono<MemoDTO> suggestedMemo() {
-        return memoService.retrieveSuggestedMemo();
+    public Mono<ResponseEntity<MemoDTO>> suggestedMemo() {
+        return memoService.retrieveSuggestedMemo()
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
 }

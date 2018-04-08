@@ -63,7 +63,7 @@ class MemoRestControllerTests {
         MemoDTO savedMemo = new MemoDTO(1, "Memo content", null);
         when(mockMemoService.addMemo(toSaveMemo)).thenReturn(Mono.just(savedMemo));
         webTestClient.post().uri("/rest/addmemo").body(BodyInserters.fromObject(toSaveMemo)).exchange().expectStatus()
-                .isOk().expectBody(MemoDTO.class).isEqualTo(savedMemo);
+                .isCreated().expectBody(MemoDTO.class).isEqualTo(savedMemo);
         verify(mockMemoService).addMemo(toSaveMemo);
     }
 
